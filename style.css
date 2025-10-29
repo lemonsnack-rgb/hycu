@@ -1,0 +1,272 @@
+/* ========== 기본 셸 스타일 (from ver.1.995) ========== */
+body { 
+    font-family: 'Noto Sans KR', sans-serif; 
+    background-color: #F9F9F9; 
+}
+.sidebar-link.active { 
+    background-color: #F5F1E9; 
+    color: #6A0028; 
+    font-weight: 700; 
+}
+.sidebar-link:not(.active):hover { 
+    background-color: #F3F4F6; 
+}
+.tab-link.active { 
+    border-bottom-color: #6A0028; 
+    color: #6A0028; 
+    font-weight: 700; 
+}
+.calendar-day:not(.disabled):hover { 
+    background-color: #F5F1E9; 
+}
+.calendar-day.selected { 
+    background-color: #6A0028; 
+    color: white; 
+}
+.calendar-day.available { 
+    position: relative; 
+}
+.calendar-day.available::after { 
+    content: ''; 
+    position: absolute; 
+    bottom: 4px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 5px; 
+    height: 5px; 
+    border-radius: 50%; 
+    background-color: #C9BC9C; 
+}
+.calendar-day.today { 
+    border: 2px solid #6A0028; 
+}
+.stepper-sm .stepper-circle { 
+    width: 1.25rem; 
+    height: 1.25rem; 
+    font-size: 0.6rem; 
+}
+.stepper-sm .stepper-line { 
+    height: 2px; 
+}
+.stepper-item.completed .stepper-circle { 
+    background-color: #6A0028; 
+    color: white; 
+}
+.stepper-item.completed .stepper-line { 
+    background-color: #6A0028; 
+}
+.stepper-item.active .stepper-circle { 
+    background-color: #C9BC9C; 
+    color: #6A0028; 
+}
+.stepper-item.pending .stepper-circle { 
+    background-color: #DDDDDD; 
+    color: #a0a0a0; 
+}
+.stepper-item.pending .stepper-line { 
+    background-color: #DDDDDD; 
+}
+.chat-bubble-me { 
+    background-color: #6A0028; 
+    color: white; 
+}
+.chat-bubble-other { 
+    background-color: #e5e7eb; 
+    color: #1f2937; 
+}
+.modal-tab.active {
+    border-bottom: 2px solid #6A0028;
+    color: #6A0028;
+    font-weight: 600;
+}
+
+/* ========== 학생 관리 스타일 (from ver.1.996) ========== */
+.degree-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    white-space: nowrap;
+}
+.degree-badge.master { background-color: #3498db; }
+.degree-badge.phd { background-color: #9b59b6; }
+
+
+/* ========== 온라인 피드백 스타일 (from ver.1.25) ========== */
+.feedback-tab.active { 
+    border-color: #6A0028; 
+    background-color: #F5F1E9; 
+    color: #6A0028; 
+}
+.comment-marker {
+    position: absolute; width: 24px; height: 24px; background-color: rgba(106, 0, 40, 0.8);
+    color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s ease-in-out;
+    border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 25;
+}
+.comment-marker:hover, .comment-marker.highlight { 
+    transform: scale(1.2); 
+    background-color: rgba(201, 188, 156, 1); 
+    color: #6A0028; 
+}
+.comment-card.highlight, .page-marker-card.highlight { 
+    background-color: #FEF3C7; 
+    transition: background-color 0.3s ease-in-out; 
+}
+#quickmark-popover { 
+    z-index: 70; 
+}
+#pdf-render-wrapper { 
+    width: 100%; height: 100%; overflow: auto; display: flex; 
+    justify-content: center; align-items: flex-start;
+    padding: 1rem; 
+}
+#pdf-render-area { 
+    position: relative; 
+    height: fit-content; 
+    margin: auto; 
+    transform-origin: top center; 
+}
+#pdf-canvas { 
+    border: 1px solid #ddd; 
+}
+
+.canvas-container {
+    position: absolute !important;
+    top: 0; left: 0;
+    z-index: 15; 
+    pointer-events: none;
+}
+.canvas-container.interaction-active {
+    pointer-events: auto;
+}
+#text-layer {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    color: transparent;
+    z-index: 20;
+    pointer-events: none;
+    overflow: hidden;
+    line-height: 1.0;
+}
+#text-layer.active {
+    pointer-events: auto;
+}
+#text-layer > div,
+#text-layer > span {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+}
+#marker-container { 
+    position: absolute; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    pointer-events: none; 
+    z-index: 30; 
+}
+
+.pdf-toolbar-btn.active { 
+    background-color: #F5F1E9; 
+    color: #6A0028; 
+}
+.record-btn.recording .fa-microphone { display: none; }
+.record-btn.recording .fa-stop { display: inline-block; color: red; }
+.record-btn:not(.recording) .fa-microphone { display: inline-block; }
+.record-btn:not(.recording) .fa-stop { display: none; }
+
+.comment-thread { 
+    max-height: 250px; 
+    overflow-y: auto; 
+    padding-right: 8px; 
+    display: flex; 
+    flex-direction: column; 
+}
+.comment-card .comment-thread { 
+    max-height: 150px; 
+}
+.comment-bubble { 
+    padding: 8px 12px; 
+    border-radius: 12px; 
+    margin-bottom: 8px; 
+    max-width: 95%; 
+}
+.comment-bubble p { 
+    white-space: pre-wrap; 
+    word-break: break-word; 
+    font-size: 14px; 
+}
+.comment-bubble .author { 
+    font-weight: bold; 
+    font-size: 13px; 
+    margin-bottom: 2px; 
+}
+.comment-bubble .timestamp { 
+    font-size: 11px; 
+    color: #6B7280; 
+}
+.professor-comment { 
+    background-color: #F5F1E9; 
+    align-self: flex-end; 
+    text-align: left; 
+}
+.student-comment { 
+    background-color: #F3F4F6; 
+    align-self: flex-start; 
+}
+.attachment-list a { 
+    transition: color 0.2s; 
+}
+.attachment-list a:hover { 
+    color: #6A0028; 
+}
+#inline-feedback.linking-active .comment-card:not(.is-linking-source) { 
+    cursor: cell; 
+    border: 2px dashed #C9BC9C; 
+}
+.comment-card.is-linking-source { 
+    background-color: #FEF3C7; 
+    border: 2px solid #FBBF24; 
+}
+.linked-comment-tag { 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+}
+.linked-comment-tag:hover { 
+    background-color: #6A0028; 
+    color: white; 
+}
+.page-marker-card { 
+    cursor: pointer; 
+    transition: background-color 0.3s ease-in-out; 
+}
+
+/* ========== Video.js 테마 (from ver.1.995) ========== */
+.video-js .vjs-progress-holder .vjs-play-progress,
+.video-js .vjs-volume-level {
+    background-color: #6A0028;
+}
+.video-js .vjs-big-play-button {
+    background-color: rgba(106, 0, 40, 0.8);
+    border-color: rgba(106, 0, 40, 0.9);
+}
+.video-js:hover .vjs-big-play-button {
+    background-color: rgba(106, 0, 40, 1);
+}
+
+/* ========== 반응형 처리 (from ver.1.995) ========== */
+@media (max-width: 1024px) {
+    /* (ver.1.995의 스타일은 피드백 모달에서 패널을 숨겼지만,
+       ver.1.25의 고도화된 뷰어는 양쪽 패널이 모두 필요하므로
+       해당 스타일을 주석 처리하거나 제거하여 모바일에서도 보이도록 합니다.
+       여기서는 일단 유지하되, 추후 모바일 UI 정책에 따라 수정이 필요합니다.) */
+    
+    /*
+    .pdf-viewer-panel { width: 100% !important; }
+    .feedback-panel { display: none !important; }
+    #comment-tool { display: none !important; }
+    */
+}

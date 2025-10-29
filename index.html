@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>논문 지도 관리 시스템 (교수용)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js" defer></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100">
+
+    <div class="relative flex min-h-screen">
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden sm:hidden"></div>
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg flex-shrink-0 p-4 z-30 transition-transform duration-300 ease-in-out -translate-x-full sm:relative sm:translate-x-0">
+            <div class="mb-8">
+                <img src="https://i.ibb.co/271kh4Tt/HYCU-GS-SIGNATURE.png" alt="한양사이버대학교 대학원 로고" class="w-full mb-2" onerror="this.onerror=null; this.src='https://placehold.co/200x40/FFFFFF/6A0028?text=HYCU+GS';">
+                <h1 class="text-xl font-bold text-gray-800 pl-4">논문 지도 시스템</h1>
+            </div>
+            <nav class="space-y-2">
+                <a href="#" data-view="dashboard" class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 transition-colors duration-200 active"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="ml-4">대시보드</span></a>
+                <a href="#" data-view="studentManagement" class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 transition-colors duration-200"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><span class="ml-4">지도 학생 관리</span></a>
+                <a href="#" data-view="meetings" class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 transition-colors duration-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg><span class="ml-4">랩미팅 관리</span></a>
+                <a href="#" data-view="onlineFeedback" class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 transition-colors duration-200"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg><span class="ml-4">온라인 피드백 관리</span></a>
+                <a href="#" data-view="reviews" class="sidebar-link flex items-center p-3 rounded-lg text-gray-700 transition-colors duration-200"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg><span class="ml-4">심사 관리</span></a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto" style="background-color: #F9F9F9;">
+            <div class="flex items-center justify-between mb-8">
+                <button id="menu-toggle" class="sm:hidden p-2 rounded-md text-gray-600 hover:bg-gray-200"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+                <h2 id="view-title" class="text-2xl sm:text-3xl font-bold text-gray-800">대시보드</h2>
+                <div class="flex items-center">
+                     <div class="relative">
+                        <button id="lang-switcher-btn" class="flex items-center text-gray-600 hover:text-[#6A0028]"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m0 18a9 9 0 009-9m-9 9a9 9 0 00-9-9" /></svg><span id="current-lang" class="ml-1 text-sm">Language</span></button>
+                        <div id="lang-menu" class="absolute right-0 mt-2 w-28 bg-white rounded-md shadow-lg hidden z-40">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="ko">한국어</a><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="en">English</a><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="zh">中文</a><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-lang="ja">日本語</a>
+                        </div>
+                    </div>
+                    <span class="text-gray-600 mx-3 hidden sm:block">박교수님</span>
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div>
+                    <button id="logout-btn" title="로그아웃" class="ml-4 text-gray-500 hover:text-[#6A0028]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="content-area"></div>
+        </main>
+    </div>
+    
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <div id="feedback-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-7xl h-[90vh] transform transition-all duration-300 ease-in-out scale-95 flex flex-col">
+             <div class="flex justify-between items-center p-4 border-b">
+                <div id="feedback-modal-header" class="flex items-center space-x-4">
+                    </div>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+             </div>
+            <div id="feedback-modal-content" class="flex-grow flex overflow-hidden relative">
+                </div>
+        </div>
+    </div>
+    
+    <div id="version-select-modal" class="fixed inset-0 flex items-center justify-center hidden z-60 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-lg font-bold text-gray-800">버전 선택</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            <div id="version-select-list" class="p-4 max-h-96 overflow-y-auto">
+                </div>
+        </div>
+    </div>
+
+    <div id="student-info-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md transform transition-all duration-300 ease-in-out scale-95">
+             <div class="flex justify-between items-center p-5 border-b">
+                <h3 class="text-xl font-bold text-gray-800">학생 정보</h3>
+                <button class="modal-close-btn text-gray-400 hover:text-gray-800 text-3xl">&times;</button>
+             </div>
+             <div class="p-6 space-y-3 text-gray-700 text-sm">
+                <div class="flex"><p class="font-semibold w-20">이름:</p> <span id="info-name"></span></div>
+                <div class="flex"><p class="font-semibold w-20">학번:</p> <span id="info-student-id"></span></div>
+                <div class="flex"><p class="font-semibold w-20">학위과정:</p> <span id="info-degree"></span></div>
+                <hr class="my-3">
+                <div class="flex"><p class="font-semibold w-20">연락처:</p> <span id="info-phone"></span></div>
+                <div class="flex"><p class="font-semibold w-20">이메일:</p> <span id="info-email"></span></div>
+            </div>
+             <div class="px-6 pb-4 flex justify-end">
+                <button class="modal-close-btn bg-[#6A0028] text-white px-4 py-2 rounded-md hover:bg-opacity-90 text-sm">닫기</button>
+             </div>
+        </div>
+    </div>
+
+    <div id="notification-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl transform transition-all duration-300 ease-in-out scale-95">
+             <div class="flex justify-between items-center p-4 border-b"><h3 class="text-xl font-bold text-gray-800">알림 발송</h3><button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button></div>
+            <div class="p-6">
+                <div class="mb-4"><label class="block text-sm font-medium text-gray-700">발송 대상</label><div id="notification-recipients" class="mt-1 p-2 bg-gray-100 rounded-md text-sm text-gray-800"></div></div>
+                <div class="flex border-b mb-4"><button data-tab="email" class="notification-tab modal-tab p-3 text-sm text-gray-500 active">이메일</button><button data-tab="sms" class="notification-tab modal-tab p-3 text-sm text-gray-500">SMS</button><button data-tab="kakao" class="notification-tab modal-tab p-3 text-sm text-gray-500">알림톡</button></div>
+                <div id="notification-content"><div id="email-content" class="notification-panel"><input type="text" placeholder="제목" class="w-full p-2 border rounded-md mb-2 text-sm"><textarea class="w-full p-2 border rounded-md text-sm" rows="6" placeholder="내용을 입력하세요..."></textarea></div><div id="sms-content" class="notification-panel hidden"><textarea class="w-full p-2 border rounded-md text-sm" rows="6" placeholder="단문 메시지 내용을 입력하세요... (90byte)"></textarea></div><div id="kakao-content" class="notification-panel hidden"><textarea class="w-full p-2 border rounded-md text-sm" rows="6" placeholder="카카오 알림톡 내용을 입력하세요..."></textarea></div></div>
+            </div>
+            <div class="p-4 border-t flex justify-end items-center bg-gray-50"><button class="modal-close-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-md mr-2 hover:bg-gray-300 text-sm">취소</button><button class="bg-[#6A0028] text-white px-4 py-2 rounded-md hover:bg-opacity-90 text-sm">발송</button></div>
+        </div>
+    </div>
+    
+    <div id="plan-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[90vh] transform transition-all duration-300 ease-in-out scale-95 flex flex-col">
+             <div class="flex justify-between items-center p-4 border-b"><h3 id="plan-modal-title" class="text-xl font-bold text-gray-800">논문 지도 계획 관리</h3><button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button></div>
+            <div class="flex-grow p-6 overflow-y-auto">
+                <div class="bg-gray-50 p-4 rounded-lg border mb-6">
+                    <h4 class="font-bold text-md text-gray-800 mb-3">신규 지도 계획 등록</h4>
+                    <form id="add-plan-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"><input type="text" name="topic" placeholder="지도 주제" class="p-2 border rounded-md md:col-span-2"><input type="date" name="date" class="p-2 border rounded-md"><textarea name="content" placeholder="지도 내용" class="p-2 border rounded-md md:col-span-3" rows="3"></textarea><select name="method" class="p-2 border rounded-md bg-white"><option>지도 방식 선택</option><option>대면미팅</option><option>화상미팅</option><option>온라인 피드백</option></select><input type="number" name="session" placeholder="회차" class="p-2 border rounded-md"><button type="submit" class="bg-[#6A0028] text-white px-4 py-2 rounded-md hover:bg-opacity-90 md:col-start-3">계획 추가</button></form>
+                </div>
+                <div><h4 class="font-bold text-md text-gray-800 mb-3">등록된 지도 계획 (2025학년도 2학기)</h4><div id="plan-list-container" class="overflow-x-auto"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="record-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-5xl h-[90vh] transform transition-all duration-300 ease-in-out scale-95 flex flex-col">
+             <div class="flex justify-between items-center p-4 border-b"><h3 id="record-modal-title" class="text-xl font-bold text-gray-800">논문 지도 실적 조회</h3><button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button></div>
+            <div id="record-modal-content" class="flex-grow p-6 overflow-y-auto"></div>
+             <div class="p-4 border-t flex justify-end items-center bg-gray-50"><button class="modal-close-btn bg-[#6A0028] text-white px-4 py-2 rounded-md hover:bg-opacity-90">닫기</button></div>
+        </div>
+    </div>
+
+    <div id="meeting-detail-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-2xl transform transition-all duration-300 ease-in-out scale-95">
+             <div class="flex justify-between items-center mb-4"><h3 id="meeting-detail-title" class="text-2xl font-bold text-gray-800">랩미팅 상세</h3><button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button></div>
+            <div id="meeting-detail-content" class="space-y-4 text-gray-700"></div>
+             <div class="mt-6 flex justify-end"><button class="modal-close-btn bg-[#6A0028] text-white px-4 py-2 rounded-md hover:bg-opacity-90">닫기</button></div>
+        </div>
+    </div>
+
+    <div id="review-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[90vh] transform transition-all duration-300 ease-in-out scale-95 flex flex-col">
+             <div class="flex justify-between items-center p-4 border-b"><h3 id="review-modal-title" class="text-xl font-bold text-gray-800">논문 심사 평가표</h3><button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button></div>
+            <div id="review-modal-content" class="flex-grow p-6 overflow-y-auto"></div>
+             <div class="p-4 border-t flex justify-end items-center bg-gray-50"><button class="modal-close-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-md mr-2 hover:bg-gray-300 text-sm">취소</button><button class="bg-[#C9BC9C] text-[#6A0028] px-4 py-2 rounded-md mr-2 hover:bg-opacity-90 text-sm">임시 저장</button><button class="bg-[#6A0028] text-white px-4 py-2 rounded-md hover:bg-opacity-90 text-sm">심사 완료</button></div>
+        </div>
+    </div>
+
+    <div id="report-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[90vh] transform transition-all duration-300 ease-in-out scale-95 flex flex-col">
+             <div class="flex justify-between items-center p-4 border-b"><h3 id="report-modal-title" class="text-xl font-bold text-gray-800">심사 보고서 상세</h3><button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button></div>
+            <div id="report-modal-content" class="flex-grow p-6 overflow-y-auto"></div>
+            <div id="report-modal-footer" class="p-4 border-t flex justify-end items-center bg-gray-50"></div>
+        </div>
+    </div>
+
+    <div id="video-player-modal" class="fixed inset-0 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl transform transition-all duration-300 ease-in-out scale-95 flex flex-col">
+             <div class="flex justify-between items-center p-4 border-b">
+                <h3 id="video-player-modal-title" class="text-xl font-bold text-gray-800">랩미팅 다시보기</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+             </div>
+             <div class="p-6 bg-gray-50">
+                <div id="video-info-text" class="text-sm text-gray-700 mb-4 p-3 bg-white rounded-md border"></div>
+                <video id="my-video-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="100%" height="auto" data-setup='{ "fluid": true }'>
+                    <p class="vjs-no-js">
+                        영상을 재생하려면 JavaScript를 활성화해야 합니다.
+                    </p>
+                </video>
+             </div>
+        </div>
+    </div>
+
+    <div id="quickmark-popover" class="absolute hidden bg-white border rounded-lg shadow-xl z-70 w-80">
+        <div class="p-3 border-b"><h4 class="font-bold text-base text-gray-800">자주 쓰는 코멘트 관리</h4></div>
+        <div id="quickmark-list" class="max-h-48 overflow-y-auto p-1">
+            </div>
+        <div id="quickmark-management" class="p-3 bg-gray-50 border-t">
+            <div id="add-from-textarea-section" class="hidden mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p class="text-sm font-semibold text-yellow-800 mb-2">현재 입력된 내용으로 추가</p>
+                <input type="text" id="quickmark-title-from-text" placeholder="코멘트 제목 입력" class="w-full p-2 border rounded-md text-sm mb-2">
+                <button id="add-quickmark-from-text-btn" class="w-full bg-[#C9BC9C] text-[#6A0028] px-3 py-1.5 rounded-md hover:bg-opacity-90 text-sm font-semibold">이 내용 저장</button>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-gray-700 mb-2">새 코멘트 직접 추가</p>
+                <input type="text" id="quickmark-new-title" placeholder="코멘트 제목" class="w-full p-2 border rounded-md text-sm mb-2">
+                <textarea id="quickmark-new-content" placeholder="코멘트 내용" class="w-full p-2 border rounded-md text-sm mb-2" rows="3"></textarea>
+                <button id="add-quickmark-btn" class="w-full bg-[#6A0028] text-white px-3 py-1.5 rounded-md hover:bg-opacity-90 text-sm font-semibold">새 코멘트 추가</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/data.js"></script>       <script src="js/common.js"></script>      <script src="js/feedback.js"></script>    <script src="js/main.js"></script>        </body>
+</html>
